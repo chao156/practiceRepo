@@ -12,7 +12,7 @@
     </div>
       <br><br>
     <div id="login">
-      <el-button v-on:click="login">登录</el-button>
+      <el-button v-on:click="login()">登录</el-button>
     </div>
   </el-card>
 
@@ -37,11 +37,11 @@
         })
         .then(successResponse =>{
           if(successResponse.data.code==200){
-            this.$router.replace({path:'/index'})
+            this.$router.replace({path:'/FunRealize'})
           }
         })
         .catch(failResponse=>{
-          
+
         })
       }
     }
