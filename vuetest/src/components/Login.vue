@@ -1,6 +1,5 @@
 <template>
   <el-card class="box-card" style="width:500px">
-
     <div id="form">
       <el-row>
         <el-input v-model="Login.username" id="username" type="text" placeholder="请输入用户名" style="width:200px" />
@@ -15,7 +14,6 @@
       <el-button v-on:click="login()">登录</el-button>
     </div>
   </el-card>
-
 </template>
 
 <script>
@@ -31,7 +29,7 @@
     methods:{
       login(){
         this.$axios
-        .post('/login',{
+        .post('api/login',{
           username:this.Login.username,
           password:this.Login.password
         })
