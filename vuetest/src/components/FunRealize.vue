@@ -1,8 +1,25 @@
 <template>
-  <div id="Form">
+  <div>
+    <el-card>
+    <el-table ref="multipleTable":data="tableData" height="250" border style="width: 720px">
+         <el-table-column type="selection" width="55"></el-table-column>
+         <el-table-column prop="college" label="学校" width="120"></el-table-column>
+         <el-table-column prop="department" label="院系" width="120"></el-table-column>
+         <el-table-column prop="classes" label="班级" width="120"></el-table-column>
+         <el-table-column prop="name" label="姓名" width="120"></el-table-column>
+         <el-table-column prop="age" label="年龄" width="120"></el-table-column>
+         <el-table-column prop="sex" label="性别" width="120"></el-table-column>
+         <el-table-column
+      fixed="right"
+      label="操作"
+      width="100">
+                 <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                 <el-button type="text" size="small">编辑</el-button>
+                 </el-table-column>
+    </el-table>
  <el-button @click="dialogFormVisible = true">新增学生信息</el-button>
-
-  <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+</el-card>
+  <el-dialog title="新增信息" :visible.sync="dialogFormVisible">
    <el-form :model="form">
      <el-form-item label="学校" :label-width="formLabelWidth">
        <el-input v-model="form.college" autocomplete="off"></el-input>
@@ -33,6 +50,9 @@
 
 <script>
   export default {
+       created:function(){
+        this.loadInfo();
+      },
       data() {
            return {
              dialogFormVisible: false,
@@ -44,7 +64,9 @@
                age:"",
                sex:""
              },
-             formLabelWidth: '50px'
+             formLabelWidth: '50px',
+             tableData:[]
+
            };
          },
       methods:{
@@ -66,6 +88,11 @@
           .catch(failResponse =>{
             this.$message("新增保存失败");
           })
+        },
+        loadInfo(){
+           this.$axios.get('student/selectStudentInfo').then(resp=>{
+            this.tableData = resp.data.list
+          });
         }
       }
 
