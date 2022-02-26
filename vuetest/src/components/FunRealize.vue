@@ -1,8 +1,9 @@
 <template>
   <div>
     <el-card>
-    <el-table ref="multipleTable":data="tableData" height="250" border style="width: 720px">
+    <el-table ref="multipleTable":data="tableData" height="250" border style="width: 720px" >
          <el-table-column type="selection" width="55"></el-table-column>
+         <el-table-column prop="id" ></el-table-column>
          <el-table-column prop="college" label="学校" width="120"></el-table-column>
          <el-table-column prop="department" label="院系" width="120"></el-table-column>
          <el-table-column prop="classes" label="班级" width="120"></el-table-column>
@@ -13,11 +14,12 @@
       fixed="right"
       label="操作"
       width="100">
-                 <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                 <el-button @click="open()" type="text" size="small">删除</el-button>
                  <el-button type="text" size="small">编辑</el-button>
                  </el-table-column>
     </el-table>
- <el-button @click="dialogFormVisible = true">新增学生信息</el-button>
+     <el-button @click="openBatchDelete()" type="primary">批量删除</el-button>
+ <el-button @click="dialogFormVisible = true" type="primary">新增学生信息</el-button>
 </el-card>
   <el-dialog title="新增信息" :visible.sync="dialogFormVisible">
    <el-form :model="form">
@@ -65,8 +67,9 @@
                sex:""
              },
              formLabelWidth: '50px',
-             tableData:[]
-
+             tableData:[],
+             rows:[],
+             ids:""
            };
          },
       methods:{
@@ -93,9 +96,48 @@
            this.$axios.get('student/selectStudentInfo').then(resp=>{
             this.tableData = resp.data.list
           });
-        }
-      }
+        },
+        openBatchDelete(){
+          var rows = this.$refs.multipleTable.selection;
+          var idArray=[];
+          for(var i = 0;i<rows.length;i++){
+            idArray[i] = rows[i].id;
+          }
+          ids = idArray.join();
+          this.$confirm('确定批量删除选中信息吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                  })
+                  .then(() => {
+                    var _this=this;
+                    _this.$axios.get("/student/batchDelete",{
+                      ids:ids
+                      })
+                    .then(successResponse =>{
+                      if(successResponse.data.code==200){
+                        this.$message({
+                          type: 'success',
+                          message: '删除成功!'
+                        });
 
+                      }
+                    })
+                    .catch(failResponse=>{
+                      this.$message({
+                        type: 'error',
+                        message: '删除失败!'
+                      });
+                    })
+                  })
+                  .catch(() => {
+                    this.$message({
+                      type: 'info',
+                      message: "取消删除"
+                    });
+                  })
+            },
+      }
     }
 </script>
 
