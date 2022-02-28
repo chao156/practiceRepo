@@ -68,8 +68,7 @@
              },
              formLabelWidth: '50px',
              tableData:[],
-             rows:[],
-             ids:""
+             rows:[]
            };
          },
       methods:{
@@ -103,7 +102,7 @@
           for(var i = 0;i<rows.length;i++){
             idArray[i] = rows[i].id;
           }
-          ids = idArray.join();
+          var ids = idArray.join();
           this.$confirm('确定批量删除选中信息吗?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -111,16 +110,13 @@
                   })
                   .then(() => {
                     var _this=this;
-                    _this.$axios.get("/student/batchDelete",{
-                      ids:ids
-                      })
+                    _this.$axios.post("/student/batchDelete",ids)
                     .then(successResponse =>{
                       if(successResponse.data.code==200){
                         this.$message({
                           type: 'success',
                           message: '删除成功!'
                         });
-
                       }
                     })
                     .catch(failResponse=>{
